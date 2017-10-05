@@ -50,8 +50,9 @@ public class AuditExportRoute extends RouteBuilder {
     from("direct:fetchAudit")
         .setHeader("from", header(AuditSyncService.FROM_INDEX))
         .setHeader("to", header(AuditSyncService.TO_INDEX))
-        .setHeader(ElasticsearchConstants.PARAM_INDEX_NAME, simple("auditsample"))
-        .setHeader(ElasticsearchConstants.PARAM_INDEX_TYPE, simple("Audit"))
+        .setHeader(ElasticsearchConstants.PARAM_INDEX_NAME, simple("{{elasticsearch.audit" +
+                                                                       ".index}}"))
+        .setHeader(ElasticsearchConstants.PARAM_INDEX_TYPE, simple("{{elasticsearch.audit.type}}"))
         .bean("auditRestService", "fetchAudit(${header.from}, ${header.to})")
         .choice()
         .when(simple("${body.count} > 0"))
